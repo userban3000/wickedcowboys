@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6684284499461874665}
   - component: {fileID: 6684284499461874664}
-  - component: {fileID: 6684284499461874667}
+  - component: {fileID: 4795405970441295322}
   m_Layer: 0
-  m_Name: Player Weapon
+  m_Name: Riverbed Wand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6684284499461874667
+--- !u!114 &4795405970441295322
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,8 +92,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6684284499461874646}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a352333fc43013c43b45f4b6d4bddff7, type: 3}
+  m_Script: {fileID: 11500000, guid: 8320b4aad667ad14ba0172fb6d72cb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rateOfFire: 0.2
-  bulletPrefab: {fileID: 8705197946072037490, guid: 30d971fa208946649a217ed32a5c46f2, type: 3}
+  itemName: Riverbed Wand
+  icon: {fileID: 21300000, guid: 39417e571074a254793e575d5b56d70d, type: 3}
+  sr: {fileID: 6684284499461874664}
+  rateOfFire: 0.3
+  projectile: {fileID: 8705197946072037490, guid: 30d971fa208946649a217ed32a5c46f2, type: 3}

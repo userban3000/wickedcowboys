@@ -23,9 +23,8 @@ public class Player : DamageableEntity {
     private Vector3 currentTargetPos;
 
     [Header("Shooting")]
-    public Weapon startingWeapon;
-    public Weapon weapon;
-    public Transform weaponHolder;
+    public Item heldItem;
+    public Transform itemHolder;
 
     [Header("Interaction")]
     public float interactionCooldown;
@@ -37,9 +36,6 @@ public class Player : DamageableEntity {
         base.Start();
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
-
-        if ( startingWeapon != null ) 
-            ChangeWeapon(startingWeapon);
         
         interactionCooldown = 0;
     }
@@ -56,8 +52,8 @@ public class Player : DamageableEntity {
         playerRotating.transform.rotation = Quaternion.Euler(0, 0, rotAngle);
 
         //SHOOTING
-        if (Input.GetMouseButton(0) ) {
-            weapon.Shoot(rotAngle);
+        if (Input.GetMouseButton(0) && heldItem != null ) {
+            heldItem.Use();
         }
 
         //CROSSHAIR MOVEMENT
@@ -72,7 +68,8 @@ public class Player : DamageableEntity {
 
         //ITEM DETECTION
         interactionCooldown += Time.deltaTime;
-        if ( interactionCooldown >= 0.25f ) { //only run it 4 times a sec since its rather slow
+        //DISABLED FOR DEBUG ONLY, REMOVE && FALSE
+        if ( interactionCooldown >= 0.25f && false ) { //only run it 4 times a sec since its rather slow
             interactionCooldown = 0;
 
             ContactFilter2D itemFilter = new ContactFilter2D();
@@ -97,21 +94,18 @@ public class Player : DamageableEntity {
 
         //ITEM PICKUP
         if ( targetedItemGO != null && Input.GetKeyDown(KeyCode.E) ) {
-            WorldItem targetedItem = targetedItemGO.GetComponent<WorldItem>();
-
-            Weapon newWeapon = targetedItem.weapon;
-            ChangeWeapon(newWeapon);
-
-
+            
         }
     }
 
-    public void ChangeWeapon(Weapon newWeapon){
-        if ( weapon != null ) 
-            weapon.Drop();
+    public void EquipItem(Item itemToEquip) {
+        if ( heldItem != null )
+            GameObject.Destroy(heldItem.gameObject);
         
-        weapon = Instantiate(newWeapon, weaponHolder.position, weaponHolder.rotation) as Weapon;
-        weapon.transform.parent = weaponHolder;
+        if ( itemToEquip != null ) {
+            heldItem = Instantiate(itemToEquip, itemHolder.position, itemHolder.rotation) as Item;
+            heldItem.transform.parent = itemHolder;
+        }
     }
 
     IEnumerator SmoothCam() {

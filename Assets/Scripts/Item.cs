@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
-public class Weapon : MonoBehaviour {
-
+public class Item : MonoBehaviour {
+    
+    public string itemName;
+    public Sprite icon;
+    
     public SpriteRenderer sr;
 
     public float rateOfFire;
-    public GameObject bulletPrefab;
+    public GameObject projectile;
     private float timeSinceLastShot;
 
     private void Start() {
@@ -18,20 +20,19 @@ public class Weapon : MonoBehaviour {
     private void Update() {
         timeSinceLastShot += Time.deltaTime;
     }
-    
-    public void Shoot(float rotAngle) {
+
+    public void Use() {
         if ( timeSinceLastShot < rateOfFire ) {
             return;
         }
         timeSinceLastShot = 0;
 
-        Instantiate(bulletPrefab, this.transform.position, Quaternion.Euler(0, 0, rotAngle));
+        Instantiate(projectile, this.transform.position, Quaternion.Euler(transform.eulerAngles));
     }
 
     public void Drop() {
-        WorldItem item = new WorldItem(this);
-        Instantiate(item, transform.position, Quaternion.identity);
+        //WorldItem item = new WorldItem(this);
+        //Instantiate(item, transform.position, Quaternion.identity);
         GameObject.Destroy(gameObject);
     }
-
 }

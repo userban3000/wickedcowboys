@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b2d209b7f13d44aaa7cbc05dff6e79, type: 3}
+  m_Name: Basic Wand
+  m_EditorClassIdentifier: 
+  itemName: Basic Wand
+  icon: {fileID: 21300000, guid: 39417e571074a254793e575d5b56d70d, type: 3}
+  weapon: {fileID: 0}
