@@ -18,7 +18,7 @@ public class DamageableEntity : MonoBehaviour {
         return health;
     }
 
-    protected virtual void TakeDamage(float damage) {
+    public virtual void TakeDamage(float damage) {
         health -= damage;
         if ( OnHealthChanged != null ) {
             OnHealthChanged();

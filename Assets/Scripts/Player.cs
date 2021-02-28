@@ -9,7 +9,7 @@ public class Player : DamageableEntity {
     public GameObject playerRotating;
     public float playerSpeed;
     public float mouseSens;
-    private float rotAngle;
+    public float rotAngle;
 
     [Header("Camera & Mouse")]
     public Camera cam;
@@ -23,17 +23,25 @@ public class Player : DamageableEntity {
     private Vector3 currentTargetPos;
 
     [Header("Shooting")]
-    private Weapon weapon;
-    public GameObject bulletPrefab;
+    public Weapon startingWeapon;
+    public Weapon weapon;
+    public Transform weaponHolder;
 
-    private void Awake() {
-        weapon = GetComponentInChildren<Weapon>();
-    }
+    [Header("Interaction")]
+    public float interactionCooldown;
+    public CircleCollider2D interactionCollider;
+    public LayerMask itemLayer;
+    public GameObject targetedItemGO;
 
     protected override void Start() {
         base.Start();
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
+
+        if ( startingWeapon != null ) 
+            ChangeWeapon(startingWeapon);
+        
+        interactionCooldown = 0;
     }
 
     private void Update() {
@@ -61,6 +69,49 @@ public class Player : DamageableEntity {
         camTargetPos = playerHolder.transform.position + (crosshair.transform.position - playerHolder.transform.position) / camMovementWithCrosshair + new Vector3 (0, 0, -cameraDist);
         StartCoroutine(SmoothCam());
         cam.transform.position = currentTargetPos;
+
+        //ITEM DETECTION
+        interactionCooldown += Time.deltaTime;
+        if ( interactionCooldown >= 0.25f ) { //only run it 4 times a sec since its rather slow
+            interactionCooldown = 0;
+
+            ContactFilter2D itemFilter = new ContactFilter2D();
+            itemFilter.useLayerMask = true;
+            itemFilter.layerMask = itemLayer;
+
+            Collider2D[] itemsInRange = new Collider2D[10];
+
+            interactionCollider.OverlapCollider(itemFilter, itemsInRange);
+
+            targetedItemGO = null;
+            float minDist = 1000f;
+
+            foreach ( Collider2D item in itemsInRange ) {
+                float distToItem = (item.transform.position - playerHolder.transform.position).sqrMagnitude;
+                if ( distToItem < minDist ) {
+                    minDist = distToItem;
+                    targetedItemGO = item.gameObject;
+                }
+            }
+        }
+
+        //ITEM PICKUP
+        if ( targetedItemGO != null && Input.GetKeyDown(KeyCode.E) ) {
+            WorldItem targetedItem = targetedItemGO.GetComponent<WorldItem>();
+
+            Weapon newWeapon = targetedItem.weapon;
+            ChangeWeapon(newWeapon);
+
+
+        }
+    }
+
+    public void ChangeWeapon(Weapon newWeapon){
+        if ( weapon != null ) 
+            weapon.Drop();
+        
+        weapon = Instantiate(newWeapon, weaponHolder.position, weaponHolder.rotation) as Weapon;
+        weapon.transform.parent = weaponHolder;
     }
 
     IEnumerator SmoothCam() {
